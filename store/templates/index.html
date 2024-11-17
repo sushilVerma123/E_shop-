@@ -1,0 +1,71 @@
+{% include "base.html "%}
+
+<!-- we use the filter and load is keyword and cart is python file name in which filter logic is written -->
+ {% load cart %}
+  <div class="container-fluid">
+    <div class="row mt-5">
+
+<!-- side navbar-->
+      <div class="col-lg-3 border p-3 mx-auto">
+          <div class="list-group">
+                <a class="list-group-item list-group-item-action" href="/">All Products</a>
+              {% for category in categories%}
+                <a class="list-group-item list-group-item-action" href="/?category={{category.id}}">{{category.name}}</a>
+              {% endfor %}
+            </div>
+      </div>
+
+<!--      products-->
+      <div class="col-lg-8 border p-3 mx-auto">
+        <div class="row mx-auto">
+          {% for product in products %}
+          <div class="card mx-auto mb-5"  style="width: 18rem;" >
+            <img src="{{product.image.url}}" class="card-img-top" alt="...">
+            <div class="card-body" id="{{product.id}}">
+              <h5 class="card-title">{{product.name}}</h5>
+              <p class="card-text">{{product.description}}</p>
+              <h4>{{product.price}} </h4>
+
+            </div>
+              <div class="card-footer row p-0 ">
+<!--                      use the filter
+                    use for check that product in cart or not-->
+                  {% if product|is_in_cart:request.session.cart %}
+
+                   <form action="/#{{product.id}}" method="POST" class="col-2">
+                      {% csrf_token %}
+                      <input hidden type="text" value='{{product.id}}' name="product">
+                       <input hidden type="text" value='True' name="remove">
+                      <input type="submit" value="-" class="btn btn-block btn-secondary">
+                  </form>
+
+                  <div class="text-center col p-1"> {{product | cart_quantity:request.session.cart}} in cart</div>
+
+                  <form action="/#{{product.id}}" method="POST" class="col-2">
+                      {% csrf_token %}
+                      <input hidden type="text" value='{{product.id}}' name="product">
+                      <input type="submit" value="+" class="btn btn-block btn-secondary">
+                  </form>
+
+                {% else %}
+                   <form action="/#{{product.id}}" method="POST">
+                    {% csrf_token %}
+                    <input hidden type="text" value='{{product.id}}' name="product">
+                    <input type="submit" class="btn btn-secondary col-12"  value="Add To Cart">
+                    </form>
+                  {% endif %}
+              </div>
+          </div>
+            {% endfor %}
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+
+</body>
+</html>

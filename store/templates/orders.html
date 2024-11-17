@@ -1,0 +1,39 @@
+{% include "base.html "%}
+{% load cart %}
+<div class="col-lg-11 border p-3 mx-auto mt-2">
+    <table class="table table-striped">
+        <tr>
+            <th>Sr No.</th>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Prices</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>DateTime</th>
+            <th>status</th>
+
+        </tr>
+        <tbody>
+        <tr>
+            {% for detail in details %}
+            <td>{{forloop.counter}}</td>
+            <td><img class="rounded-circle" id="image" src="{{detail.product.image.url}}" style="max-height:100px "></td>
+            <td>{{detail.product.name}}</td>
+            <td>{{detail.price}}</td>
+            <td>{{detail.quantity}}</td>
+            <td>{{detail.price|multiply:detail.quantity}}</td>
+            <td>{{detail.address}}</td>
+            <td>{{detail.phone}}</td>
+            <td>{{detail.date}}</td>
+            {% if detail.status%}
+            <td class="text-success ">Completed</td>
+            {%else%}
+            <td class="text-danger">Panding</td>
+            {%endif%}
+        </tr>
+        {% endfor%}
+        </tbody>
+    </table>
+</div>
